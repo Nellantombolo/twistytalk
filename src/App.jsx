@@ -591,22 +591,20 @@ const App = () => {
                     <textarea
                         key="custom-input"
                         value={customTwisterInput}
-                        // FIX: Corrected onChange handler to fix the one-letter input bug by ensuring state is updated cleanly
-                        onChange={(e) => {
-                            const newValue = e.target.value;
-                            setCustomTwisterInput(newValue); // Primary state update must happen first and correctly
-                            
-                            // Secondary updates can follow
-                            setTwisterText(newValue); 
-                            setResult(null);
-                            setProTip('');
-                            setErrorState(null);
-                        }}
+                        onChange={(e) => setCustomTwisterInput(e.target.value)} // only update input here
                         placeholder="Type your hilarious twister here!"
                         disabled={isLoading || isRecording || isSpeaking || !isAuthReady}
                         className="w-full h-32 p-3 text-center text-2xl sm:text-3xl border-none bg-transparent resize-none focus:ring-0 font-extrabold leading-snug text-zinc-100 placeholder-zinc-500"
-                    />
-                )}
+                      />
+                    )}
+
+                    // Sync other related state whenever input changes
+                    useEffect(() => {
+                      setTwisterText(customTwisterInput);
+                      setResult(null);
+                      setProTip('');
+                      setErrorState(null);
+                    }, [customTwisterInput]);
             </div>
 
             <div className="flex flex-col items-center space-y-8">
